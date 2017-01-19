@@ -32,7 +32,19 @@ class MyWebServer(SocketServer.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
+	
+	a = self.data.split()
+	print(a[0])
+
+	if(a[0] == 'GET'):
+		print 'I handle GET!'
+	else:
+		print 'No'
+
         self.request.sendall("OK")
+
+
+
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
