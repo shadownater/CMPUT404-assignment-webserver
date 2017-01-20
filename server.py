@@ -1,5 +1,5 @@
 #  coding: utf-8 
-import SocketServer
+import SocketServer, urllib2, mimetypes
 
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 # 
@@ -28,6 +28,9 @@ import SocketServer
 
 
 class MyWebServer(SocketServer.BaseRequestHandler):
+
+    #to send stuff, they need to receive a header
+    sendHeader='' 
     
     def handle(self):
         self.data = self.request.recv(1024).strip()
@@ -38,10 +41,16 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
 	if(a[0] == 'GET'):
 		print 'I handle GET!'
+		#figure out what they want
+		print a[1]
+		self.sendHeader = a[1]		
+		
+
 	else:
+		#provide error message that POST/PUT/DELETE not supported
 		print 'No'
 
-        self.request.sendall("OK")
+        self.request.sendall(self.sendHeader + '\r\n')
 
 
 
