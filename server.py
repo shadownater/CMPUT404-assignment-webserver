@@ -31,6 +31,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
     #to send stuff, they need to receive a header
     sendHeader = '' 
+    global pageExists
     pageExists = False
     directExists = False
     

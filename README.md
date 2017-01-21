@@ -26,6 +26,8 @@ Jan 19, 2017: General idea of what MIME is and how to use it. Header info: http:
 
 Jan 19, 2017: Python os Documentation (for curdir, ref'd in above): https://docs.python.org/2/library/os.html
 
+Jan. 20, 2017: Python global variable how-to: Unode, http://stackoverflow.com/users/125801/unode, http://stackoverflow.com/questions/4693120/use-of-global-keyword-in-python
+
 Generally everything is LICENSE'D under the Apache 2 license by Abram Hindle.
 
 server.py contains contributions from:
