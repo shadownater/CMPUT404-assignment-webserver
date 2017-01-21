@@ -1,5 +1,5 @@
 #  coding: utf-8 
-import SocketServer, urllib2, mimetypes
+import SocketServer, urllib2, mimetypes, os
 
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 # 
@@ -30,7 +30,9 @@ import SocketServer, urllib2, mimetypes
 class MyWebServer(SocketServer.BaseRequestHandler):
 
     #to send stuff, they need to receive a header
-    sendHeader='' 
+    sendHeader = '' 
+    pageExists = False
+    directExists = False
     
     def handle(self):
         self.data = self.request.recv(1024).strip()
@@ -43,14 +45,28 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 		print 'I handle GET!'
 		#figure out what they want
 		print a[1]
-		self.sendHeader = a[1]		
+		#self.sendHeader = a[1] #need anymore?		
+		if(a[1] == '/'):
+			     #load the site
+			     mimetype = 'text/html'
+			     pageExists = True
+
+		if(pageExists):
+		#load that page (try for index.html for now)
+		      self.sendHeader += 'HTTP/1.1 200 OK\r\n'
+		      self.sendHeader += mimetype 
+		      print os.curdir + os.sep + 'index.html'
+		      f = open (os.curdir + os.sep + 'www/index.html')
+		      self.thePage = f.read()
+		      #f.close()
 		
+	     		
 
 	else:
 		#provide error message that POST/PUT/DELETE not supported
-		print 'No'
+		self.sendHeader = '405 Method Not Allowed'
 
-        self.request.sendall(self.sendHeader + '\r\n')
+        self.request.sendall(self.sendHeader + '\r\n' + self.thePage)
 
 
 
