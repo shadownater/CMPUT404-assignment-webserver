@@ -31,10 +31,18 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
     #to send stuff, they need to receive a header
     sendHeader = '' 
-    global pageExists
     pageExists = False
     directExists = False
-    
+    mimetype = 'Content-Type: '
+
+    #def finalHeader(self):
+        #makes the header from given info
+#	self.sendHeader += self.mimetype 
+#	print os.curdir + os.sep + 'index.html'
+#	f = open (os.curdir + os.sep + 'www/index.html')
+#	self.thePage = f.read()
+	#f.close()
+
     def handle(self):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
@@ -43,24 +51,58 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 	print(a[0])
 
 	if(a[0] == 'GET'):
-		print 'I handle GET!'
-		#figure out what they want
-		print a[1]
-		#self.sendHeader = a[1] #need anymore?		
-		if(a[1] == '/'):
-			     #load the site
-			     mimetype = 'text/html'
-			     pageExists = True
+            #code goes here to do anything at all
 
-		if(pageExists):
-		#load that page (try for index.html for now)
-		      self.sendHeader += 'HTTP/1.1 200 OK\r\n'
-		      self.sendHeader += mimetype 
-		      print os.curdir + os.sep + 'index.html'
-		      f = open (os.curdir + os.sep + 'www/index.html')
-		      self.thePage = f.read()
-		      #f.close()
+		#figure out what they want to see
+		print a[1]
 		
+                #if(os.path.isdir(os.curdir + a[1]) ):
+                #   print os.curdir + a[1]
+                #   print'Thats a valid directory above me!'
+
+                #if('deep' in a[1]):
+                #    #serve deep index, css, if valid. 302 otherwise
+                #    print 'Deep!'
+
+
+                #    if(a[1] != '/deep'):
+                #        #302 error here
+                #        print 'Im a 302 error!'
+                #    else:
+                        #all is well
+                #        print 'Arrived in deep ok!'
+                #        self.sendHeader += 'HTTP/1.1 200 OK\r\n'
+                #        self.mimetype += 'text/html\r\n'
+                #        self.pageExists = True
+
+		if(a[1] == '/'):
+                    #load the site
+                    self.sendHeader += 'HTTP/1.1 200 OK\r\n'
+                    self.mimetype += 'text/html\r\n'
+                    self.pageExists = True
+                
+                elif('css' in a[1]):
+               #     #need to make sure which one you're serving but good for now
+                   self.sendHeader += 'HTTP/1.1 200 OK\r\n'
+                   self.mimetype += 'text/css\r\n'
+                   f = open(os.curdir + os.sep + 'www/base.css')
+                   self.thePage = f.read()
+                   #self.pageExists = True
+                
+
+
+		if(self.pageExists):
+		#load that page (try for index.html for now)
+                    #self.finalHeader() IF THERE'S A PROBLEM IT'S HERE
+                    self.sendHeader += self.mimetype
+                    print 'Look below:'
+                    print self.sendHeader
+                    #print os.curdir + os.sep + 'index.html'
+                    f = open (os.curdir + os.sep + 'www/index.html')
+                    self.thePage = f.read()
+		#else:
+                    #page does not exist, throw 404
+                #    print '404 Not ready lol!'
 	     		
 
 	else:
@@ -68,6 +110,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 		self.sendHeader = '405 Method Not Allowed'
 
         self.request.sendall(self.sendHeader + '\r\n' + self.thePage)
+        #self.request.sendall('OK')
 
 
 

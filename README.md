@@ -28,6 +28,8 @@ Jan 19, 2017: Python os Documentation (for curdir, ref'd in above): https://docs
 
 Jan. 20, 2017: Python global variable how-to: Unode, http://stackoverflow.com/users/125801/unode, http://stackoverflow.com/questions/4693120/use-of-global-keyword-in-python
 
+Jan. 20, 2017: HTML sends a GET request for CSS files. AHA! https://www.fullstackpython.com/cascading-style-sheets.html
+
 Generally everything is LICENSE'D under the Apache 2 license by Abram Hindle.
 
 server.py contains contributions from:
