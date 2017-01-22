@@ -41,8 +41,8 @@ class MyWebServer(SocketServer.BaseRequestHandler):
     def finalHeader(self):
         #makes the header from given info
 	self.sendHeader += self.mimetype 
-	print 'finalHeader to open stuff: ' + os.curdir + os.sep + self.location
-	f = open (os.curdir + os.sep + self.location, 'r') 
+	print 'finalHeader to open stuff: ' + self.location
+	f = open (self.location, 'r') #os.curdir + os.sep + 
 	self.thePage = f.read()
 	#can't do below until sure it's a file, not a directory! If /, show appropriate index and content back	
 	self.getContentLength()
@@ -99,25 +99,30 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 		elif(os.path.isfile(os.curdir + '/www' + a[1]) ):
 			print os.curdir + a[1]
 			print 'Thats a valid file above me! 200 OK!'
-		
-		if(a[1] == '/index.html'): #remove afterwards
-                    	#load the site
-                    	self.sendHeader += 'HTTP/1.1 200 OK\r\n'
+			self.sendHeader += 'HTTP/1.1 200 OK\r\n'
 			mimetypeOfficial = self.getMimetype(a[1])        	
 			self.mimetype   += mimetypeOfficial
                     	self.pageExists = True
 			self.location = os.curdir + '/www'+  a[1]
+		
+		#if(a[1] == '/index.html'): #remove afterwards
+                    	#load the site
+                #    	self.sendHeader += 'HTTP/1.1 200 OK\r\n'
+		#	mimetypeOfficial = self.getMimetype(a[1])        	
+		#	self.mimetype   += mimetypeOfficial
+                #    	self.pageExists = True
+		#	self.location = os.curdir + '/www'+  a[1]
                 
-                elif('css' in a[1]):
+                #elif('css' in a[1]):
                     #need to make sure which one you're serving but good for now
-                   	print 'In css code'
-			self.sendHeader += 'HTTP/1.1 200 OK\r\n'
-                   	mimetypeOfficial = self.getMimetype(a[1])    
-			self.mimetype   += mimetypeOfficial    	
+                #   	print 'In css code'
+		#	self.sendHeader += 'HTTP/1.1 200 OK\r\n'
+                #   	mimetypeOfficial = self.getMimetype(a[1])    
+		#	self.mimetype   += mimetypeOfficial    	
                    	#f = open(os.curdir + os.sep + 'www/base.css')
                    	#self.thePage = f.read()
-                   	self.pageExists = True
-                	self.location = os.curdir + '/www'+  a[1]
+                #   	self.pageExists = True
+                #	self.location = os.curdir + '/www'+  a[1]
 
 
 		if(self.pageExists):
@@ -131,7 +136,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
 	else:
 		#provide error message that POST/PUT/DELETE not supported
-		self.sendHeader = '405 Method Not Allowed'
+		self.sendHeader = '405 Method Not Allowed\r\n'
 
         self.request.sendall(self.sendHeader + '\r\n' + self.thePage) 
         #self.request.sendall('OK')
