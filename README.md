@@ -30,6 +30,12 @@ Jan. 20, 2017: Python global variable how-to: Unode, http://stackoverflow.com/us
 
 Jan. 20, 2017: HTML sends a GET request for CSS files. AHA! https://www.fullstackpython.com/cascading-style-sheets.html
 
+Jan 21, 2017: Nicole told me about using .encode for the content length
+
+Jan 21, 2017: Mimetype thing: http://stackoverflow.com/questions/947372/custom-simple-python-http-server-not-serving-css-files
+
+Jan 21, 2017: Normpath: https://docs.python.org/2/library/os.path.html#os.path.normpath
+
 Generally everything is LICENSE'D under the Apache 2 license by Abram Hindle.
 
 server.py contains contributions from:
