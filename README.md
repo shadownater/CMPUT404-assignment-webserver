@@ -20,7 +20,7 @@ Jan 18, 2017: How to split a string by white spaces in Python. [Sven Marnach](ht
 
 Jan 19, 2017: Consulted Ryan Satyabrata.
 
-Jan 19, 2017: [Kobitoko](https://github.com/kobitoko)(Ryan Satyabrata) repo for os.path info, header + contents tip. Generally understanding Python: https://github.com/kobitoko/CMPUT404-assignment-webserver 
+Jan 19, 2017: [Kobitoko](https://github.com/kobitoko) (Ryan Satyabrata) repo for os.path info, header + contents tip. Generally understanding Python: https://github.com/kobitoko/CMPUT404-assignment-webserver 
 
 Jan 19, 2017: General idea of what MIME is and how to use it. Header info: http://www.acmesystems.it/python_httpd
 
