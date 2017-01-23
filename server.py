@@ -1,7 +1,7 @@
 #  coding: utf-8 
 import SocketServer, urllib2, mimetypes, os
 
-# Copyright 2013 Abram Hindle, Eddie Antonio Santos
+# Copyright 2013 Abram Hindle, Eddie Antonio Santos, Jillian Lovas, Nicole Lovas, Ryan Satyabrata.
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -61,6 +61,9 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 	if(ender == 'css'):
 		return 'text/css;\r\n'
 
+    #Parts of this function written by Ryan Satyabrata
+    #Under Apache 2
+    #https://github.com/kobitoko/CMPUT404-assignment-webserver/blob/master/server.py
     def headerNotFound(self):
 	#builds a 404 not found
 	self.sendHeader += 'HTTP/1.1 404 Not Found\r\n'
@@ -87,7 +90,10 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 		slash = False
 		if(a[1].endswith('/') ):
 			slash = True
-
+		
+		#Normpath line written by Ryan Satyabrata
+    		#Under Apache 2
+                #https://github.com/kobitoko/CMPUT404-assignment-webserver/blob/master/server.py
 		a[1] = os.path.normpath(os.path.normcase(a[1]))
 
 		if(slash):
