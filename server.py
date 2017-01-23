@@ -36,7 +36,8 @@ class MyWebServer(SocketServer.BaseRequestHandler):
     mimetype = 'Content-Type: '
     contentLength ='Content-Length: '
     thePage = ''
-    location = ''	
+    location = ''
+    is302 = False	
 
     def finalHeader(self):
         #makes the header from given info
@@ -72,6 +73,10 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 	self.getContentLength()
 	self.sendHeader += 'Content-Length: ' + self.contentLength + '\r\n'
 
+    def header302(self):
+	self.sendHeader += self.headerLocation
+	print '302 header is: ' + self.sendHeader
+
     def handle(self):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
@@ -85,16 +90,45 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 		#figure out what they want to see
 		print a[1]
 		
+		slash = False
+		if(a[1].endswith('/') ):
+			slash = True
+
+		a[1] = os.path.normpath(os.path.normcase(a[1]))
+
+		if(slash):
+			a[1] += '/'
 
                 if(os.path.isdir(os.curdir + '/www'+  a[1]) ):
                 	print os.curdir + a[1]
                 	print'Thats a valid directory above me! 200 Here!'
-			a[1] += 'index.html'
-			self.sendHeader += 'HTTP/1.1 200 OK\r\n'
-			mimetypeOfficial = self.getMimetype(a[1])        	
-			self.mimetype   += mimetypeOfficial
-                    	self.pageExists = True
-			self.location = os.curdir + '/www'+  a[1]
+			
+			#check for / to determine 302
+			if(a[1].endswith('/') ):
+				print 'Ends with /!'
+				a[1] += 'index.html'
+				self.sendHeader += 'HTTP/1.1 200 OK\r\n'
+				mimetypeOfficial = self.getMimetype(a[1])        	
+				self.mimetype   += mimetypeOfficial
+                    		#self.pageExists = True
+				self.location = os.curdir + '/www'+  a[1]
+				self.finalHeader() 
+			else:
+				#valid directory but wrong build, 302
+				print '302 Coming at cha!'
+				self.sendHeader += 'HTTP/1.1 302 Found\r\n'
+				self.headerLocation = 'Location: ' + a[1] + '/' + '\r\n'
+				#mimetypeOfficial = self.getMimetype(a[1])        	
+				#self.mimetype   += mimetypeOfficial
+                    		#self.pageExists = False
+				#self.location = os.curdir + '/www'+  a[1]
+
+				#build proper thing
+				#a[1] += '/index.html'
+				self.header302()
+				self.is302 = True
+				#self.location = os.curdir + '/www'+  a[1]
+				
 
 		elif(os.path.isfile(os.curdir + '/www' + a[1]) ):
 			print os.curdir + a[1]
@@ -102,8 +136,9 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 			self.sendHeader += 'HTTP/1.1 200 OK\r\n'
 			mimetypeOfficial = self.getMimetype(a[1])        	
 			self.mimetype   += mimetypeOfficial
-                    	self.pageExists = True
+                    	#self.pageExists = True
 			self.location = os.curdir + '/www'+  a[1]
+			self.finalHeader() 
 		
 		#if(a[1] == '/index.html'): #remove afterwards
                     	#load the site
@@ -125,9 +160,9 @@ class MyWebServer(SocketServer.BaseRequestHandler):
                 #	self.location = os.curdir + '/www'+  a[1]
 
 
-		if(self.pageExists):
+		#if(self.pageExists):
 		#load that page (try for index.html for now)
-                    self.finalHeader() 
+                #    self.finalHeader() 
                    
 		else:
                     #page does not exist, throw 404
@@ -138,10 +173,13 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 		#provide error message that POST/PUT/DELETE not supported
 		self.sendHeader = '405 Method Not Allowed\r\n'
 
-        self.request.sendall(self.sendHeader + '\r\n' + self.thePage) 
-        #self.request.sendall('OK')
-
-
+	if(self.is302):
+		print 'Heres the 302 Header:'
+		print self.sendHeader
+        	self.request.sendall(self.sendHeader + '\r\n') 
+        	#self.request.sendall('OK')
+	else:
+		self.request.sendall(self.sendHeader + '\r\n' + self.thePage) 
 
 
 if __name__ == "__main__":
